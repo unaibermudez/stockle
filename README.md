@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# Stockle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Stockle is a financial puzzle game inspired by Wordle. Every day, a new stock is chosen as the "Stock of the Day," and your goal is to guess it within a limited number of attempts.
 
-Currently, two official plugins are available:
+## How to Play
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1.  **Search & Select**: Type a company name or ticker in the search box.
+2.  **Analyze Attributes**: After each guess, the game provides feedback on how close your selection is to the target stock based on several attributes:
+    - **Sector**: Industry category.
+    - **Country**: Base of operations.
+    - **Exchange**: Where the stock is traded (e.g., NASDAQ, NYSE).
+    - **Market Cap**: Company valuation (Higher/Lower indicators).
+    - **P/E Ratio**: Price-to-earnings ratio (Higher/Lower indicators).
+    - **And more...**
+3.  **Color Indicators**:
+    - 🟩 **Green**: Correct attribute.
+    - 🟥 **Red**: Incorrect categorical attribute.
+    - ⬆️ **Up Arrow**: The target value is higher.
+    - ⬇️ **Down Arrow**: The target value is lower.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Keyboard First**: Fully playable using `Tab`, `Arrow Keys`, and `Enter`.
+- **Responsive Design**: Optimized for desktop and mobile, with horizontal scrolling for data-heavy tables on small screens.
+- **Daily Challenge**: The target stock is deterministic based on the current date.
+- **Modern UI**: Dark-themed, high-contrast interface with interactive feedback.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React** (TypeScript)
+- **Vite**
+- **Vanilla CSS**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  Install dependencies: `npm install`
+2.  Start development server: `npm run dev`
+3.  Build for production: `npm run build`
