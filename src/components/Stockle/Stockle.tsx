@@ -214,8 +214,8 @@ export default function Stockle() {
                             </div>
 
                             {/* Rows */}
-                            {guesses.map((guess, i) => (
-                                <div key={i} className="guess-row">
+                            {[...guesses].reverse().map((guess, i) => (
+                                <div key={guesses.length - 1 - i} className="guess-row">
                                     <div className="guess-stock-info">
                                         <div className="guess-symbol">{guess.symbol}</div>
                                         <div className="guess-name">{guess.name}</div>
