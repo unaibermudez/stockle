@@ -27,12 +27,18 @@ Stockle is a financial puzzle game inspired by Wordle. Every day, a new stock is
 
 ## Tech Stack
 
-- **React** (TypeScript)
-- **Vite**
+- **Next.js 15** (App Router)
+- **React 19** (TypeScript)
+- **Finnhub API** (real-time stock data)
 - **Vanilla CSS**
 
 ## Getting Started
 
-1.  Install dependencies: `npm install`
-2.  Start development server: `npm run dev`
-3.  Build for production: `npm run build`
+1.  Create a free account at [finnhub.io](https://finnhub.io) and copy your API key.
+2.  Install dependencies: `npm install`
+3.  Create a `.env.local` file at the project root:
+    ```
+    FINNHUB_API_KEY=your_api_key_here
+    ```
+4.  Start development server: `npm run dev`
+5.  Build for production: `npm run build`

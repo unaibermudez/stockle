@@ -1,44 +1,74 @@
-import { useState, useEffect, useRef, type KeyboardEvent } from "react";
-import type { Stock, Guess, GameStatus } from "../../types/stock";
-import { STOCKS_DB, getTodayStock } from "../../data/stocks";
+"use client";
+
+import { useState, useEffect, useRef, useCallback, type KeyboardEvent } from "react";
+import type { Stock, Guess, GameStatus, ComparisonResult } from "../../types/stock";
 import { MAX_GUESSES, ATTRIBUTES } from "../../config/gameConfig";
 import { compareAttribute, formatValue, getArrow } from "../../utils/helpers";
+import { fetchDailyStock, searchStocks as apiSearch, fetchStock } from "../../lib/api";
 import "./Stockle.css";
 
 export default function Stockle() {
-    const [target] = useState<Stock>(getTodayStock);
+    const [target, setTarget] = useState<Stock | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [query, setQuery] = useState("");
     const [selected, setSelected] = useState<Stock | null>(null);
-    const [suggestions, setSuggestions] = useState<Stock[]>([]);
+    const [suggestions, setSuggestions] = useState<Array<{ symbol: string; name: string }>>([]);
     const [guesses, setGuesses] = useState<Guess[]>([]);
     const [gameStatus, setGameStatus] = useState<GameStatus>("playing");
     const [showModal, setShowModal] = useState(false);
     const [activeIndex, setActiveIndex] = useState<number>(-1);
+    const [searching, setSearching] = useState(false);
     
     const inputRef = useRef<HTMLInputElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // Load the daily stock
+    useEffect(() => {
+        fetchDailyStock()
+            .then(setTarget)
+            .catch((err) => setError(err.message))
+            .finally(() => setLoading(false));
+    }, []);
 
     // Initial focus
     useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
+        if (!loading) inputRef.current?.focus();
+    }, [loading]);
 
-    // Suggestions filtering
-    useEffect(() => {
-        if (query.length < 1 || selected?.name === query) {
+    // Debounced search
+    const doSearch = useCallback(async (q: string) => {
+        if (q.length < 1) {
             setSuggestions([]);
             setActiveIndex(-1);
             return;
         }
-        const q = query.toLowerCase();
-        const already = new Set(guesses.map(g => g.symbol));
-        const results = STOCKS_DB.filter(s =>
-            !already.has(s.symbol) &&
-            (s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q))
-        ).slice(0, 6);
-        setSuggestions(results);
-        setActiveIndex(results.length > 0 ? 0 : -1);
-    }, [query, guesses, selected]);
+        setSearching(true);
+        try {
+            const results = await apiSearch(q);
+            const already = new Set(guesses.map(g => g.symbol));
+            const filtered = results.filter(r => !already.has(r.symbol)).slice(0, 6);
+            setSuggestions(filtered);
+            setActiveIndex(filtered.length > 0 ? 0 : -1);
+        } catch {
+            setSuggestions([]);
+        } finally {
+            setSearching(false);
+        }
+    }, [guesses]);
+
+    // Trigger search on query change
+    useEffect(() => {
+        if (selected) {
+            setSuggestions([]);
+            setActiveIndex(-1);
+            return;
+        }
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => doSearch(query), 300);
+        return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    }, [query, selected, doSearch]);
 
     // Click outside listener
     useEffect(() => {
@@ -51,18 +81,23 @@ export default function Stockle() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleSelect = (stock: Stock) => {
-        setSelected(stock);
-        setQuery(stock.name);
+    const handleSelect = async (item: { symbol: string; name: string }) => {
         setSuggestions([]);
         setActiveIndex(-1);
+        setQuery(item.name);
+        try {
+            const stock = await fetchStock(item.symbol);
+            setSelected(stock);
+        } catch {
+            setError(`No se pudo cargar ${item.symbol}`);
+        }
         inputRef.current?.focus();
     };
 
     const handleGuess = () => {
-        if (!selected || gameStatus !== "playing") return;
+        if (!selected || !target || gameStatus !== "playing") return;
         
-        const results: Record<string, any> = {};
+        const results: Record<string, ComparisonResult> = {};
         ATTRIBUTES.forEach(attr => {
             results[attr.key] = compareAttribute(
                 selected[attr.key as keyof Stock], 
@@ -112,6 +147,40 @@ export default function Stockle() {
             setActiveIndex(-1);
         }
     };
+
+    if (loading) {
+        return (
+            <>
+                <div className="scanline" />
+                <div className="grid-bg" />
+                <div className="app">
+                    <header className="header">
+                        <div className="logo">FINANCIAL PUZZLE</div>
+                        <h1 className="title">STOCKLE</h1>
+                        <p className="subtitle">Cargando el stock del día...</p>
+                    </header>
+                </div>
+            </>
+        );
+    }
+
+    if (error || !target) {
+        return (
+            <>
+                <div className="scanline" />
+                <div className="grid-bg" />
+                <div className="app">
+                    <header className="header">
+                        <div className="logo">FINANCIAL PUZZLE</div>
+                        <h1 className="title">STOCKLE</h1>
+                        <p className="subtitle" style={{ color: "var(--wrong)" }}>
+                            {error || "Error cargando datos. Verifica tu API key de Finnhub."}
+                        </p>
+                    </header>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -186,7 +255,7 @@ export default function Stockle() {
                                         >
                                             <span className="suggestion-symbol">{s.symbol}</span>
                                             <span className="suggestion-name">{s.name}</span>
-                                            <span className="suggestion-cap">${s.marketCap}B</span>
+                                            {searching && <span className="suggestion-cap">...</span>}
                                         </button>
                                     ))}
                                 </div>

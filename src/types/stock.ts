@@ -9,6 +9,11 @@ export interface Stock {
     employees: number;
     founded: number;
     dividendYield: number;
+    // New fields from Finnhub API
+    beta?: number;
+    revenueGrowth?: number;
+    weekHigh52?: number;
+    weekLow52?: number;
 }
 
 export type ComparisonResult = "correct" | "wrong" | "high" | "low";
