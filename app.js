@@ -645,7 +645,7 @@ function showDevStockList() {
           "border-radius:5px;padding:2px 6px;color:var(--amber);cursor:pointer;font-size:11px;";
         pickBtn.addEventListener("click", () => {
           G.answer = s; G.guesses = []; G.status = "playing"; G.lastAdded = -1;
-          closeModals(); renderAll();
+          resetHintCooldown(); closeModals(); renderAll();
         });
         btnTd.appendChild(pickBtn);
       } else {
@@ -722,7 +722,7 @@ function renderDevBar() {
     G.guesses  = [];
     G.status   = "playing";
     G.lastAdded = -1;
-    closeModals();
+    resetHintCooldown(); closeModals();
     renderAll();
   });
 
@@ -760,31 +760,83 @@ function getHintStock() {
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
+const HINT_COOLDOWN_MS = 30000;
+let hintLastUsed = 0;
+let hintCdInterval = null;
+
+function resetHintCooldown() { hintLastUsed = 0; clearInterval(hintCdInterval); hintCdInterval = null; }
+
+const HINT_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.3 9a2.7 2.7 0 0 1 5.2 1c0 1.8-2.7 2-2.7 4"/><path d="M12 17.5h.01"/></svg>`;
+
 function renderFooter() {
   const footer = document.getElementById("footer");
   footer.innerHTML = "";
+  clearInterval(hintCdInterval); hintCdInterval = null;
   if (G.status !== "playing" || G.guesses.length >= MAX_GUESSES) return;
 
   const hint = getHintStock();
+
   const btn = document.createElement("button");
   btn.id = "btn-hint";
-  btn.disabled = !hint;
   btn.style.cssText = "display:flex;align-items:center;gap:7px;background:none;" +
     "border:1px solid var(--border);border-radius:10px;padding:8px 16px;" +
-    "color:var(--muted);cursor:" + (hint ? "pointer" : "not-allowed") + ";font-family:inherit;" +
-    "font-size:12.5px;font-weight:600;transition:border-color .15s,color .15s;opacity:" + (hint ? "1" : "0.45") + ";";
-  btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="9"/><path d="M9.3 9a2.7 2.7 0 0 1 5.2 1c0 1.8-2.7 2-2.7 4"/><path d="M12 17.5h.01"/>
-  </svg>` + (hint ? "Dame una pista" : "Sin pistas disponibles");
+    "color:var(--muted);font-family:inherit;font-size:12.5px;font-weight:600;" +
+    "transition:border-color .15s,color .15s;";
 
-  if (hint) {
-    btn.addEventListener("mouseover",  () => { btn.style.borderColor = "var(--border-strong)"; btn.style.color = "var(--text)"; });
-    btn.addEventListener("mouseout",   () => { btn.style.borderColor = ""; btn.style.color = "var(--muted)"; });
-    btn.addEventListener("click", () => {
-      btn.disabled = true;
-      handleGuess(hint);
-    });
+  function setReady() {
+    btn.disabled = false;
+    btn.style.cursor = "pointer";
+    btn.style.opacity = "1";
+    btn.innerHTML = HINT_ICON + "Dame una pista";
+    btn.onmouseover = () => { btn.style.borderColor = "var(--border-strong)"; btn.style.color = "var(--text)"; };
+    btn.onmouseout  = () => { btn.style.borderColor = ""; btn.style.color = "var(--muted)"; };
   }
+
+  function setNoHint() {
+    btn.disabled = true;
+    btn.style.cursor = "not-allowed";
+    btn.style.opacity = "0.45";
+    btn.innerHTML = HINT_ICON + "Sin pistas disponibles";
+    btn.onmouseover = null; btn.onmouseout = null;
+  }
+
+  function setCooldown(secsLeft) {
+    btn.disabled = true;
+    btn.style.cursor = "not-allowed";
+    btn.style.opacity = "0.6";
+    btn.innerHTML = HINT_ICON + "Pista en " + secsLeft + "s…";
+    btn.onmouseover = null; btn.onmouseout = null;
+  }
+
+  function tick() {
+    const remaining = Math.ceil((HINT_COOLDOWN_MS - (Date.now() - hintLastUsed)) / 1000);
+    if (remaining <= 0) {
+      clearInterval(hintCdInterval); hintCdInterval = null;
+      if (hint) setReady(); else setNoHint();
+    } else {
+      setCooldown(remaining);
+    }
+  }
+
+  const onCooldown = hintLastUsed > 0 && (Date.now() - hintLastUsed) < HINT_COOLDOWN_MS;
+
+  if (onCooldown) {
+    tick();
+    hintCdInterval = setInterval(tick, 500);
+  } else if (hint) {
+    setReady();
+  } else {
+    setNoHint();
+  }
+
+  btn.addEventListener("click", () => {
+    if (!hint || btn.disabled) return;
+    hintLastUsed = Date.now();
+    setCooldown(Math.ceil(HINT_COOLDOWN_MS / 1000));
+    hintCdInterval = setInterval(tick, 500);
+    handleGuess(hint);
+  });
+
   footer.appendChild(btn);
 }
 
