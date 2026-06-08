@@ -848,8 +848,21 @@ function renderAll() {
   document.getElementById("autocomplete").classList.add("hidden");
 }
 
+/* ── Precios dinámicos ──────────────────────────────────────────────────── */
+async function loadPrices() {
+  try {
+    const res = await fetch("prices.json?_=" + Date.now());
+    if (!res.ok) return;
+    const { prices } = await res.json();
+    if (!prices) return;
+    for (const s of STOCKS) {
+      if (prices[s.ticker] != null) s.price = prices[s.ticker];
+    }
+  } catch {}
+}
+
 /* ── Inicialización ─────────────────────────────────────────────────────── */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const pn = puzzleNumber();
   const saved = loadGame(pn);
   G = {
@@ -861,6 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stats: loadStats(), lastAdded: -1
   };
 
+  await loadPrices();
   renderAll();
   setupSearch();
 
