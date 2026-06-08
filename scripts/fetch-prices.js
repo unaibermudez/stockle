@@ -1,7 +1,16 @@
-// Obtiene precios actuales de FMP y escribe prices.json
-// Uso: FMP_API_KEY=xxx node scripts/fetch-prices.js
-const fs = require("fs");
+// Obtiene precios actuales de Yahoo Finance (gratis, sin API key)
+// En GitHub Actions cada run usa una IP limpia → sin rate limiting
+// Uso: node scripts/fetch-prices.js
+const fs   = require("fs");
 const path = require("path");
+
+// Tickers que difieren entre stocks.js y Yahoo Finance
+const YF_MAP = {
+  "BRK.B":  "BRK-B",
+  "LVMH":   "MC.PA",
+  "NESN":   "NESN.SW",
+  "ARMCO":  "2222.SR",
+};
 
 const TICKERS = [
   // España — IBEX 35
@@ -19,7 +28,7 @@ const TICKERS = [
   "VID.MC","LAR.MC","OHLA.MC","DFG.MC","ERE.MC","ELEC.MC",
   // España — Tier D + Adicionales
   "ADX.MC","BRIO.MC","LGT.MC","GAM.MC","BERKA.MC","LBTS.MC","INMB.MC",
-  "SCYR.MC","TRE.MC","HOME.MC","MVC.MC","PSG.MC","TL5.MC","TLGO.MC",
+  "SCYR.MC","TRE.MC","HOME.MC","MVC.MC","TL5.MC","TLGO.MC",
   "NHH.MC","UNI.MC","RJF.MC","ZOT.MC","BME.MC","REE.MC","ANE.MC","CASH.MC","OPDE.MC",
   // USA
   "AAPL","MSFT","NVDA","GOOGL","AMZN","META","TSLA","BRK.B","JPM","V",
@@ -29,68 +38,70 @@ const TICKERS = [
   "RY","SHOP","SHEL","AZN","HSBC","INFY","VALE","BHP","ARMCO","SPOT"
 ];
 
-const API_KEY = process.env.FMP_API_KEY;
-const BASE    = "https://financialmodelingprep.com/api/v3";
-const CHUNK   = 50; // FMP soporta hasta ~100 tickers por petición en quote
+const UA    = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36";
+const DELAY = 600;  // ms entre peticiones
+const RETRY_AFTER = 15000; // ms de espera al recibir 429
 
-function chunk(arr, size) {
-  const out = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
-}
+function toYF(ticker) { return YF_MAP[ticker] || ticker; }
 
-async function fetchBatch(tickers) {
-  const url = `${BASE}/quote/${tickers.join(",")}?apikey=${API_KEY}`;
-  const res = await fetch(url);
+async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function fetchPrice(ticker, attempt = 1) {
+  const yfTicker = toYF(ticker);
+  const url = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yfTicker)}?interval=1d&range=1d`;
+  let res;
+  try {
+    res = await fetch(url, { headers: { "User-Agent": UA } });
+  } catch (e) {
+    throw new Error(`fetch error: ${e.message}`);
+  }
+
+  if (res.status === 429 && attempt <= 3) {
+    console.warn(`    429 ${ticker} — esperando ${RETRY_AFTER / 1000}s (intento ${attempt}/3)`);
+    await sleep(RETRY_AFTER * attempt);
+    return fetchPrice(ticker, attempt + 1);
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (!Array.isArray(data)) throw new Error("Respuesta inesperada: " + JSON.stringify(data).slice(0, 120));
-  return data;
+
+  const json = await res.json();
+  const price = json?.chart?.result?.[0]?.meta?.regularMarketPrice;
+  if (price == null) throw new Error("Sin precio en respuesta");
+  return Math.round(price * 100) / 100;
 }
 
 async function main() {
-  if (!API_KEY) {
-    console.error("ERROR: FMP_API_KEY no está definido");
-    process.exit(1);
-  }
+  console.log(`Actualizando ${TICKERS.length} acciones desde Yahoo Finance…\n`);
 
-  const prices = {};
-  let ok = 0, skipped = 0;
+  // Cargar prices.json existente como fallback
+  const outPath = path.join(__dirname, "..", "prices.json");
+  let existing = {};
+  try { existing = JSON.parse(fs.readFileSync(outPath, "utf8")).prices || {}; } catch {}
 
-  for (const batch of chunk(TICKERS, CHUNK)) {
+  const prices = { ...existing };
+  let updated = 0, skipped = 0;
+
+  for (const ticker of TICKERS) {
     try {
-      const data = await fetchBatch(batch);
-      for (const item of data) {
-        if (item.symbol && item.price != null) {
-          prices[item.symbol] = Math.round(item.price * 100) / 100;
-          ok++;
-        }
-      }
-      // Los tickers que FMP no devuelve quedan con su valor estático en stocks.js
-      const returned = new Set(data.map(d => d.symbol));
-      for (const t of batch) {
-        if (!returned.has(t)) { console.warn(`  Sin precio: ${t}`); skipped++; }
-      }
+      prices[ticker] = await fetchPrice(ticker);
+      process.stdout.write(`  ✓ ${ticker.padEnd(12)} ${prices[ticker]}\n`);
+      updated++;
     } catch (e) {
-      console.error(`  Error en lote [${batch.slice(0,3).join(",")}...]: ${e.message}`);
-      skipped += batch.length;
+      process.stdout.write(`  ✗ ${ticker.padEnd(12)} ${e.message}\n`);
+      skipped++;
     }
-    // Pausa corta entre lotes
-    await new Promise(r => setTimeout(r, 300));
+    await sleep(DELAY);
   }
 
   const output = {
     updated: new Date().toISOString(),
-    count: ok,
+    count: updated,
     prices
   };
-
-  const outPath = path.join(__dirname, "..", "prices.json");
   fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
-  console.log(`prices.json actualizado: ${ok} precios OK, ${skipped} sin datos`);
+  console.log(`\nprices.json → ${updated} actualizados, ${skipped} sin datos`);
 
-  if (ok === 0) {
-    console.error("ERROR: ningún precio obtenido — ¿API key válida?");
+  if (updated === 0) {
+    console.error("ERROR: ningún precio obtenido");
     process.exit(1);
   }
 }
