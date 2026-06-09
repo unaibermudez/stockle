@@ -132,6 +132,7 @@ window.STOCKS = [
   { ticker:"NKE",     name:"Nike",                  country:"USA",    sector:"Consumer Cyclical",  marketCap:115,  price:76,   ebitda:7,    employees:79400,  founded:1964, color:"#cccccc" },
   { ticker:"INTC",    name:"Intel",                 country:"USA",    sector:"Technology",         marketCap:130,  price:30,   ebitda:11,   employees:124800, founded:1968, color:"#0071c5" },
   { ticker:"PFE",     name:"Pfizer",                country:"USA",    sector:"Healthcare",         marketCap:155,  price:27,   ebitda:18,   employees:88000,  founded:1849, color:"#0093d0" },
+  { ticker:"MNST",    name:"Monster Beverage",       country:"USA",    sector:"Consumer Defensive", marketCap:55,   price:52,   ebitda:2.2,  employees:5850,   founded:1935, color:"#00cc00" },
 
   /* ── Global ──────────────────────────────────────────────────────────── */
   { ticker:"TSM",     name:"Taiwan Semiconductor",  country:"Taiwan",      sector:"Technology",         marketCap:880,  price:170,  ebitda:48,   employees:76900,  founded:1987, color:"#ee1c25" },

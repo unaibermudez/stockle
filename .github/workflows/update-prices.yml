@@ -21,7 +21,9 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Obtener precios de Yahoo Finance
+      - name: Obtener precios de FMP
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
         run: node scripts/fetch-prices.js
 
       - name: Commit y push si hay cambios
