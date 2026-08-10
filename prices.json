@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-07T23:08:26.757Z",
-  "count": 127,
+  "updated": "2026-08-10T23:09:04.940Z",
+  "count": 44,
   "prices": {
     "ITX.MC": 58.66,
     "SAN.MC": 12.86,
@@ -71,56 +71,56 @@
     "ANE.MC": 20.86,
     "CASH.MC": 0.67,
     "OPDE.MC": 5.82,
-    "AAPL": 313.33,
-    "MSFT": 499.99,
-    "NVDA": 223.96,
-    "GOOGL": 354.3,
-    "AMZN": 274.48,
-    "META": 592.1,
-    "TSLA": 328.58,
-    "BRK.B": 521.8,
-    "JPM": 357.52,
-    "V": 362.5,
-    "WMT": 111.85,
-    "XOM": 152.94,
-    "UNH": 407.08,
-    "JNJ": 259.24,
-    "PG": 145.77,
-    "HD": 355.62,
-    "KO": 87.05,
-    "PEP": 139.02,
-    "MCD": 274.48,
-    "DIS": 104.9,
-    "BA": 234.42,
-    "NKE": 41.7,
-    "INTC": 101.65,
-    "PFE": 26.74,
-    "MNST": 90.36,
-    "TSM": 420.04,
-    "ASML": 1740.99,
-    "SAP": 206.16,
-    "NVO": 47.26,
+    "AAPL": 308.26,
+    "MSFT": 506.06,
+    "NVDA": 217.55,
+    "GOOGL": 357.52,
+    "AMZN": 278.09,
+    "META": 594.92,
+    "TSLA": 330.88,
+    "BRK.B": 529.42,
+    "JPM": 359.79,
+    "V": 361.32,
+    "WMT": 112.66,
+    "XOM": 159.79,
+    "UNH": 408.74,
+    "JNJ": 261.81,
+    "PG": 146.38,
+    "HD": 350.78,
+    "KO": 86.87,
+    "PEP": 137.73,
+    "MCD": 273.72,
+    "DIS": 103.2,
+    "BA": 232.79,
+    "NKE": 42.11,
+    "INTC": 97.52,
+    "PFE": 27.05,
+    "MNST": 91.43,
+    "TSM": 418.47,
+    "ASML": 1733.48,
+    "SAP": 208.55,
+    "NVO": 47.73,
     "NESN": 81.21,
     "LVMH": 480,
-    "TM": 190.09,
-    "SONY": 23.46,
-    "BABA": 128.41,
-    "TCEHY": 61.92,
-    "RY": 211.08,
-    "SHOP": 151.57,
-    "SHEL": 88.5,
-    "AZN": 161.42,
-    "HSBC": 103.73,
-    "INFY": 12.53,
-    "VALE": 14.71,
-    "BHP": 90.41,
+    "TM": 188.78,
+    "SONY": 23.82,
+    "BABA": 132.32,
+    "TCEHY": 61.52,
+    "RY": 210.79,
+    "SHOP": 155.18,
+    "SHEL": 89.95,
+    "AZN": 161.91,
+    "HSBC": 103.32,
+    "INFY": 12.56,
+    "VALE": 14.89,
+    "BHP": 90.61,
     "ARMCO": 26.5,
-    "SPOT": 488.14,
+    "SPOT": 511.82,
     "ALMS.MC": 10.84,
     "ATRM.MC": 5.15,
     "EBO.MC": 20.94,
     "ENCE.MC": 2.59,
-    "CCEP.MC": 108.29,
+    "CCEP.MC": 106.03,
     "AUD.MC": 1.19,
     "GREN.MC": 91.6,
     "AMPE.MC": 4.88,
@@ -131,1018 +131,354 @@
     "ERE.MC": 3.49
   },
   "profiles": {
-    "ITX.MC": {
-      "price": 58.66,
-      "marketCap": 182785570301,
-      "employees": 67195,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2001-05-24"
-    },
-    "SAN.MC": {
-      "price": 12.858,
-      "marketCap": 188732587592,
-      "employees": 185279,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "BBVA.MC": {
-      "price": 24.6,
-      "marketCap": 135922025637,
-      "employees": 123281,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "IBE.MC": {
-      "price": 20.7,
-      "marketCap": 138134029381,
-      "employees": 44745,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "CABK.MC": {
-      "price": 12.82,
-      "marketCap": 89210598100,
-      "employees": 47257,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2007-10-10"
-    },
-    "AENA.MC": {
-      "price": 26.84,
-      "marketCap": 40260000000,
-      "employees": 10238,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2015-02-11"
-    },
-    "FER.MC": {
-      "price": 57.36,
-      "marketCap": 41353815611,
-      "employees": 22464,
-      "sector": "Industrials",
-      "country": "NL",
-      "ipoDate": "2000-01-03"
-    },
-    "AMS.MC": {
-      "price": 57.5,
-      "marketCap": 24649502673,
-      "employees": 20605,
-      "sector": "Technology",
-      "country": "ES",
-      "ipoDate": "2010-04-29"
-    },
-    "CLNX.MC": {
-      "price": 27.56,
-      "marketCap": 18281996085,
-      "employees": 2494,
-      "sector": "Communication Services",
-      "country": "ES",
-      "ipoDate": "2015-05-07"
-    },
-    "NTGY.MC": {
-      "price": 28.72,
-      "marketCap": 26606025082,
-      "employees": 6645,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ELE.MC": {
-      "price": 42.24,
-      "marketCap": 43235166628,
-      "employees": 8927,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ACS.MC": {
-      "price": 109,
-      "marketCap": 28928466475,
-      "employees": 167803,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2002-01-02"
-    },
-    "REP.MC": {
-      "price": 25.28,
-      "marketCap": 27545248124,
-      "employees": 24523,
-      "sector": "Energy",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "TEF.MC": {
-      "price": 3.671,
-      "marketCap": 20661321895,
-      "employees": 82175,
-      "sector": "Communication Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "GRF.MC": {
-      "price": 10.175,
-      "marketCap": 6924906221,
-      "employees": 25000,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2006-05-17"
-    },
-    "IAG.MC": {
-      "price": 5.158,
-      "marketCap": 22714977025,
-      "employees": 52762,
-      "sector": "Industrials",
-      "country": "GB",
-      "ipoDate": "2011-01-24"
-    },
-    "MAP.MC": {
-      "price": 4.42,
-      "marketCap": 13566382961,
-      "employees": 30846,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2001-09-17"
-    },
-    "ANA.MC": {
-      "price": 213,
-      "marketCap": 11546064162,
-      "employees": 68502,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "SAB.MC": {
-      "price": 3.446,
-      "marketCap": 16756190011,
-      "employees": 13943,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "BKT.MC": {
-      "price": 16.45,
-      "marketCap": 14783373481,
-      "employees": 6657,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ENG.MC": {
-      "price": 16.84,
-      "marketCap": 4383417630,
-      "employees": 1408,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2002-06-26"
-    },
-    "MTS.MC": {
-      "price": 62.96,
-      "marketCap": 47912817758,
-      "employees": 125554,
-      "sector": "Basic Materials",
-      "country": "LU",
-      "ipoDate": "2006-07-28"
-    },
-    "VIS.MC": {
-      "price": 57.4,
-      "marketCap": 2612794618,
-      "employees": 5919,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ACX.MC": {
-      "price": 17.97,
-      "marketCap": 4477382720,
-      "employees": 9094,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "LOG.MC": {
-      "price": 36.7,
-      "marketCap": 4850317398,
-      "employees": 7701,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2014-07-14"
-    },
-    "IDR.MC": {
-      "price": 63.16,
-      "marketCap": 11060974518,
-      "employees": 62396,
-      "sector": "Technology",
-      "country": "ES",
-      "ipoDate": "2000-10-03"
-    },
-    "COL.MC": {
-      "price": 5.58,
-      "marketCap": 3412764867,
-      "employees": 226,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2002-05-15"
-    },
-    "ROVI.MC": {
-      "price": 58.35,
-      "marketCap": 2984196151,
-      "employees": 1998,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2007-12-05"
-    },
-    "ALMS.MC": {
-      "price": 10.84,
-      "marketCap": 2360702680,
-      "employees": 2108,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2007-06-20"
-    },
-    "PHM.MC": {
-      "price": 78.4,
-      "marketCap": 1358192506,
-      "employees": 505,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2000-09-08"
-    },
-    "SOL.MC": {
-      "price": 0.835,
-      "marketCap": 87162613,
-      "employees": 365,
-      "sector": "Technology",
-      "country": "ES",
-      "ipoDate": "2020-10-28"
-    },
-    "MEL.MC": {
-      "price": 10.17,
-      "marketCap": 2239338921,
-      "employees": 19058,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "MRL.MC": {
-      "price": 14.77,
-      "marketCap": 9145330916,
-      "employees": 295,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2014-06-30"
-    },
-    "FDR.MC": {
-      "price": 20.36,
-      "marketCap": 3866220645,
-      "employees": 6666,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2007-10-31"
-    },
-    "SGRE.MC": {
-      "price": 18.05,
-      "marketCap": 0,
-      "employees": 25869,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2002-01-02"
-    },
-    "CIE.MC": {
-      "price": 25.8,
-      "marketCap": 3059831651,
-      "employees": 25902,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2002-06-05"
-    },
-    "CAF.MC": {
-      "price": 66.9,
-      "marketCap": 2291232477,
-      "employees": 17788,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ATRM.MC": {
-      "price": 5.15,
-      "marketCap": 1159668884,
-      "employees": 2639,
-      "sector": "Communication Services",
-      "country": "ES",
-      "ipoDate": "2003-10-29"
-    },
-    "DIA.MC": {
-      "price": 40.35,
-      "marketCap": 2340082675,
-      "employees": 15347,
-      "sector": "Consumer Defensive",
-      "country": "ES",
-      "ipoDate": "2011-07-04"
-    },
     "EBO.MC": {
       "price": 20.94,
       "marketCap": 3221941308,
-      "employees": 5598,
+      "employees": 6586,
       "sector": "Consumer Defensive",
       "country": "ES",
       "ipoDate": "2010-11-22"
     },
-    "FCC.MC": {
-      "price": 11.04,
-      "marketCap": 5221421158,
-      "employees": 72910,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ENCE.MC": {
-      "price": 2.594,
-      "marketCap": 628087705,
-      "employees": 1342,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2002-01-02"
-    },
-    "FAE.MC": {
-      "price": 4.52,
-      "marketCap": 1407775719,
-      "employees": 2679,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
     "CCEP.MC": {
-      "price": 108.29,
-      "marketCap": 47996077220,
+      "price": 106.03,
+      "marketCap": 46994404540,
       "employees": 39000,
       "sector": "Consumer Defensive",
       "country": "GB",
       "ipoDate": "1986-11-24"
     },
-    "EDR.MC": {
-      "price": 5.54,
-      "marketCap": 586098101,
-      "employees": 1831,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2014-04-08"
-    },
-    "DOM.MC": {
-      "price": 2.795,
-      "marketCap": 419159822,
-      "employees": 11403,
-      "sector": "Technology",
-      "country": "ES",
-      "ipoDate": "2016-04-27"
-    },
-    "AZK.MC": {
-      "price": 10.1,
-      "marketCap": 246326042,
-      "employees": 1020,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "LRE.MC": {
-      "price": 8.29,
-      "marketCap": 693332492,
-      "employees": 4,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2014-03-05"
-    },
-    "GCO.MC": {
-      "price": 45,
-      "marketCap": 5311022265,
-      "employees": 8518,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "AUD.MC": {
-      "price": 1.194,
-      "marketCap": 532238730,
-      "employees": 800,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2007-04-24"
-    },
-    "GREN.MC": {
-      "price": 91.6,
-      "marketCap": 2575557870,
-      "employees": 640,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2015-07-08"
-    },
-    "CBAV.MC": {
-      "price": 61.4,
-      "marketCap": 984045888,
-      "employees": 1274,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2007-04-03"
-    },
-    "MCM.MC": {
-      "price": 13.7,
-      "marketCap": 514629335,
-      "employees": 865,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "NXT.MC": {
-      "price": 1.11,
-      "marketCap": 477625700,
-      "employees": 363,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "AMPE.MC": {
-      "price": 4.876,
-      "marketCap": 443935240,
-      "employees": 2827,
-      "sector": "Technology",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "AIRT.MC": {
-      "price": 0.092,
-      "marketCap": 143137391,
-      "employees": 970,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2005-07-12"
-    },
-    "AEDAS.MC": {
-      "price": 21.2,
-      "marketCap": 926440000,
-      "employees": 283,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2017-10-20"
-    },
-    "ALBA.MC": {
-      "price": 83.92,
-      "marketCap": 5029996960,
-      "employees": 52,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "IBPG.MC": {
-      "price": 18.35,
-      "marketCap": 200042066,
-      "employees": 283,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "TUB.MC": {
-      "price": 3.01,
-      "marketCap": 371082212,
-      "employees": 2619,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "VID.MC": {
-      "price": 88,
-      "marketCap": 3036757064,
-      "employees": 4822,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "OHLA.MC": {
-      "price": 0.4344,
-      "marketCap": 600535389,
-      "employees": 7218,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "DFG.MC": {
-      "price": 0.2025,
-      "marketCap": 43562848,
-      "employees": 496,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2002-01-02"
-    },
-    "ERE.MC": {
-      "price": 3.49,
-      "marketCap": 319112335,
-      "employees": 1329,
-      "sector": "Basic Materials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ADX.MC": {
-      "price": 1.194,
-      "marketCap": 532238730,
-      "employees": 800,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2007-04-24"
-    },
-    "LGT.MC": {
-      "price": 5.66,
-      "marketCap": 56600000,
-      "employees": 449,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "GAM.MC": {
-      "price": 1.48,
-      "marketCap": 140019997,
-      "employees": 1971,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2006-06-13"
-    },
-    "SCYR.MC": {
-      "price": 4.576,
-      "marketCap": 3659522115,
-      "employees": 13979,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "TRE.MC": {
-      "price": 27.58,
-      "marketCap": 2153996014,
-      "employees": 10441,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2006-06-21"
-    },
-    "HOME.MC": {
-      "price": 15.56,
-      "marketCap": 1511899630,
-      "employees": 585,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2017-03-29"
-    },
-    "MVC.MC": {
-      "price": 10.78,
-      "marketCap": 1634784176,
-      "employees": 210,
-      "sector": "Real Estate",
-      "country": "ES",
-      "ipoDate": "2018-02-06"
-    },
-    "PSG.MC": {
-      "price": 2.96,
-      "marketCap": 1580499622,
-      "employees": 166760,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "TL5.MC": {
-      "price": 2.89,
-      "marketCap": 905049786,
-      "employees": 1537,
-      "sector": "Communication Services",
-      "country": "ES",
-      "ipoDate": "2004-06-24"
-    },
-    "TLGO.MC": {
-      "price": 2.725,
-      "marketCap": 365339442,
-      "employees": 3594,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2015-05-07"
-    },
-    "NHH.MC": {
-      "price": 6.5,
-      "marketCap": 2831712546,
-      "employees": 15327,
-      "sector": "Consumer Cyclical",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "UNI.MC": {
-      "price": 3.514,
-      "marketCap": 9027044454,
-      "employees": 7274,
-      "sector": "Financial Services",
-      "country": "ES",
-      "ipoDate": "2017-06-30"
-    },
-    "RJF.MC": {
-      "price": 2.71,
-      "marketCap": 222425348,
-      "employees": 1400,
-      "sector": "Healthcare",
-      "country": "ES",
-      "ipoDate": "2002-11-29"
-    },
-    "ZOT.MC": {
-      "price": 7.06,
-      "marketCap": 0,
-      "employees": 5552,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "REE.MC": {
-      "price": 18.7,
-      "marketCap": 0,
-      "employees": 2143,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2000-01-03"
-    },
-    "ANE.MC": {
-      "price": 20.86,
-      "marketCap": 6770105073,
-      "employees": 3134,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2021-07-02"
-    },
-    "CASH.MC": {
-      "price": 0.666,
-      "marketCap": 974055986,
-      "employees": 56546,
-      "sector": "Industrials",
-      "country": "ES",
-      "ipoDate": "2017-03-17"
-    },
-    "OPDE.MC": {
-      "price": 5.82,
-      "marketCap": 860504413,
-      "employees": 180,
-      "sector": "Utilities",
-      "country": "ES",
-      "ipoDate": "2022-07-25"
-    },
     "AAPL": {
-      "price": 313.33,
-      "marketCap": 4601989255480,
+      "price": 308.26,
+      "marketCap": 4527524360560,
       "employees": 166000,
       "sector": "Technology",
       "country": "US",
       "ipoDate": "1980-12-12"
     },
     "MSFT": {
-      "price": 499.99,
-      "marketCap": 3712700744500,
-      "employees": 228000,
+      "price": 506.06,
+      "marketCap": 3757773833000,
+      "employees": 223000,
       "sector": "Technology",
       "country": "US",
       "ipoDate": "1986-03-13"
     },
     "NVDA": {
-      "price": 223.96,
-      "marketCap": 5424535160000,
+      "price": 217.55,
+      "marketCap": 5269278550000,
       "employees": 42000,
       "sector": "Technology",
       "country": "US",
       "ipoDate": "1999-01-22"
     },
     "GOOGL": {
-      "price": 354.3,
-      "marketCap": 4287778028630,
-      "employees": 190820,
+      "price": 357.52,
+      "marketCap": 4326746826971.0005,
+      "employees": 198933,
       "sector": "Communication Services",
       "country": "US",
       "ipoDate": "2004-08-19"
     },
     "AMZN": {
-      "price": 274.48,
-      "marketCap": 2952608808000,
+      "price": 278.09,
+      "marketCap": 2991441939000,
       "employees": 1576000,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "1997-05-15"
     },
     "META": {
-      "price": 592.1,
-      "marketCap": 1508366798097,
-      "employees": 78865,
+      "price": 594.92,
+      "marketCap": 1515550710224,
+      "employees": 75472,
       "sector": "Communication Services",
       "country": "US",
       "ipoDate": "2012-05-18"
     },
     "TSLA": {
-      "price": 328.58,
-      "marketCap": 1297742282721,
+      "price": 330.88,
+      "marketCap": 1306826241727,
       "employees": 134785,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "2010-06-29"
     },
     "BRK.B": {
-      "price": 521.8,
-      "marketCap": 1125446205871,
+      "price": 529.42,
+      "marketCap": 1141881430265,
       "employees": 387815,
       "sector": "Financial Services",
       "country": "US",
       "ipoDate": "1996-05-09"
     },
     "JPM": {
-      "price": 357.52,
-      "marketCap": 957978415200,
+      "price": 359.79,
+      "marketCap": 964060902900,
       "employees": 320560,
       "sector": "Financial Services",
       "country": "US",
       "ipoDate": "1980-03-17"
     },
     "V": {
-      "price": 362.5,
-      "marketCap": 676804613988,
+      "price": 361.32,
+      "marketCap": 674601498279,
       "employees": 34100,
       "sector": "Financial Services",
       "country": "US",
       "ipoDate": "2008-03-19"
     },
     "WMT": {
-      "price": 111.85,
-      "marketCap": 890111248000,
+      "price": 112.66,
+      "marketCap": 896557292800,
       "employees": 2100000,
       "sector": "Consumer Defensive",
       "country": "US",
       "ipoDate": "1972-08-25"
     },
     "XOM": {
-      "price": 152.94,
-      "marketCap": 633853712400,
-      "employees": 58000,
+      "price": 159.785,
+      "marketCap": 662222541100,
+      "employees": 57900,
       "sector": "Energy",
       "country": "US",
       "ipoDate": "1978-01-13"
     },
     "UNH": {
-      "price": 407.08,
-      "marketCap": 369687423980,
+      "price": 408.74,
+      "marketCap": 371194943691,
       "employees": 390000,
       "sector": "Healthcare",
       "country": "US",
       "ipoDate": "1984-10-17"
     },
     "JNJ": {
-      "price": 259.24,
-      "marketCap": 624742065364,
+      "price": 261.81,
+      "marketCap": 630935504293,
       "employees": 141700,
       "sector": "Healthcare",
       "country": "US",
       "ipoDate": "1962-01-02"
     },
     "PG": {
-      "price": 145.77,
-      "marketCap": 346525746746,
-      "employees": 109000,
+      "price": 146.38,
+      "marketCap": 347975844198,
+      "employees": 104000,
       "sector": "Consumer Defensive",
       "country": "US",
       "ipoDate": "1978-01-13"
     },
     "HD": {
-      "price": 355.62,
-      "marketCap": 354594747540,
+      "price": 350.78,
+      "marketCap": 349768701260,
       "employees": 472400,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "1981-09-22"
     },
     "KO": {
-      "price": 87.05,
-      "marketCap": 374536884705,
+      "price": 86.87,
+      "marketCap": 373762425897,
       "employees": 65900,
       "sector": "Consumer Defensive",
       "country": "US",
       "ipoDate": "1962-01-02"
     },
     "PEP": {
-      "price": 139.02,
-      "marketCap": 189901320000,
+      "price": 137.73,
+      "marketCap": 188139180000,
       "employees": 306000,
       "sector": "Consumer Defensive",
       "country": "US",
       "ipoDate": "1972-06-01"
     },
     "MCD": {
-      "price": 274.48,
-      "marketCap": 195019686880,
+      "price": 273.72,
+      "marketCap": 194479702320,
       "employees": 150000,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "1965-04-21"
     },
     "DIS": {
-      "price": 104.895,
-      "marketCap": 182151216450,
-      "employees": 231000,
+      "price": 103.195,
+      "marketCap": 179199149450,
+      "employees": 194040,
       "sector": "Communication Services",
       "country": "US",
       "ipoDate": "1957-11-12"
     },
     "BA": {
-      "price": 234.42,
-      "marketCap": 185278535400,
+      "price": 232.79,
+      "marketCap": 183990232300,
       "employees": 182000,
       "sector": "Industrials",
       "country": "US",
       "ipoDate": "1962-01-02"
     },
     "NKE": {
-      "price": 41.7,
-      "marketCap": 61708128083,
+      "price": 42.11,
+      "marketCap": 62314850685,
       "employees": 73000,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "1980-12-02"
     },
     "INTC": {
-      "price": 101.65,
-      "marketCap": 512722574283,
+      "price": 97.52,
+      "marketCap": 491890855327,
       "employees": 85100,
       "sector": "Technology",
       "country": "US",
       "ipoDate": "1980-03-17"
     },
     "PFE": {
-      "price": 26.74,
-      "marketCap": 152403025600,
+      "price": 27.05,
+      "marketCap": 154169852000,
       "employees": 75000,
       "sector": "Healthcare",
       "country": "US",
       "ipoDate": "1972-06-01"
     },
     "MNST": {
-      "price": 90.36,
-      "marketCap": 88372812820,
+      "price": 91.43,
+      "marketCap": 89419281497,
       "employees": 6332,
       "sector": "Consumer Defensive",
       "country": "US",
       "ipoDate": "1985-12-09"
     },
     "TSM": {
-      "price": 420.04,
-      "marketCap": 2178529059200,
+      "price": 418.47,
+      "marketCap": 2170386285600,
       "employees": 65152,
       "sector": "Technology",
       "country": "TW",
       "ipoDate": "1997-10-09"
     },
     "ASML": {
-      "price": 1740.99,
-      "marketCap": 671008868151,
+      "price": 1733.48,
+      "marketCap": 668114379039,
       "employees": 43938,
       "sector": "Technology",
       "country": "NL",
       "ipoDate": "1995-03-15"
     },
     "SAP": {
-      "price": 206.16,
-      "marketCap": 240224881410,
-      "employees": 111038,
+      "price": 208.55,
+      "marketCap": 243009793452,
+      "employees": 112019,
       "sector": "Technology",
       "country": "DE",
       "ipoDate": "1995-09-18"
     },
     "NVO": {
-      "price": 47.26,
-      "marketCap": 209863163192,
+      "price": 47.73,
+      "marketCap": 211950249242,
       "employees": 68794,
       "sector": "Healthcare",
       "country": "DK",
       "ipoDate": "1981-04-30"
     },
-    "NESN": {
-      "price": 81.21,
-      "marketCap": 208889986200,
-      "employees": 271000,
-      "sector": "Consumer Defensive",
-      "country": "CH",
-      "ipoDate": "1990-02-27"
-    },
-    "LVMH": {
-      "price": 480,
-      "marketCap": 236687628960,
-      "employees": 196647,
-      "sector": "Consumer Cyclical",
-      "country": "FR",
-      "ipoDate": "2000-01-03"
-    },
     "TM": {
-      "price": 190.09,
-      "marketCap": 225101654416,
+      "price": 188.78,
+      "marketCap": 223550372564,
       "employees": 390927,
       "sector": "Consumer Cyclical",
       "country": "JP",
       "ipoDate": "1980-03-17"
     },
     "SONY": {
-      "price": 23.46,
-      "marketCap": 137768046354,
+      "price": 23.82,
+      "marketCap": 139882134022,
       "employees": 94900,
       "sector": "Technology",
       "country": "JP",
       "ipoDate": "1958-12-01"
     },
     "BABA": {
-      "price": 128.41,
-      "marketCap": 307782348544,
+      "price": 132.32,
+      "marketCap": 317154118521,
       "employees": 131462,
       "sector": "Consumer Cyclical",
       "country": "CN",
       "ipoDate": "2014-09-19"
     },
     "TCEHY": {
-      "price": 61.92,
-      "marketCap": 557987583741,
+      "price": 61.52,
+      "marketCap": 554383012787,
       "employees": 115849,
       "sector": "Communication Services",
       "country": "CN",
       "ipoDate": "2010-01-05"
     },
     "RY": {
-      "price": 211.08,
-      "marketCap": 293354762400,
+      "price": 210.79,
+      "marketCap": 292951726200,
       "employees": 97795,
       "sector": "Financial Services",
       "country": "CA",
       "ipoDate": "1995-10-16"
     },
     "SHOP": {
-      "price": 151.57,
-      "marketCap": 196685520302,
+      "price": 155.18,
+      "marketCap": 201370053708,
       "employees": 7600,
       "sector": "Technology",
       "country": "CA",
       "ipoDate": "2015-05-20"
     },
     "SHEL": {
-      "price": 88.5,
-      "marketCap": 246746407500,
+      "price": 89.95,
+      "marketCap": 250789145250,
       "employees": 84000,
       "sector": "Energy",
       "country": "GB",
       "ipoDate": "1994-10-31"
     },
     "AZN": {
-      "price": 161.42,
-      "marketCap": 250341831363,
+      "price": 161.91,
+      "marketCap": 251101758865,
       "employees": 96100,
       "sector": "Healthcare",
       "country": "GB",
       "ipoDate": "1993-05-12"
     },
     "HSBC": {
-      "price": 103.73,
-      "marketCap": 356490965600,
+      "price": 103.32,
+      "marketCap": 355081910400,
       "employees": 209000,
       "sector": "Financial Services",
       "country": "GB",
       "ipoDate": "1999-07-16"
     },
     "INFY": {
-      "price": 12.53,
-      "marketCap": 50841477400,
-      "employees": 328594,
+      "price": 12.56,
+      "marketCap": 50963204800,
+      "employees": 328062,
       "sector": "Technology",
       "country": "IN",
       "ipoDate": "1999-03-11"
     },
     "VALE": {
-      "price": 14.71,
-      "marketCap": 62731295155,
+      "price": 14.89,
+      "marketCap": 63498911275,
       "employees": 65805,
       "sector": "Basic Materials",
       "country": "BR",
       "ipoDate": "2002-03-21"
     },
     "BHP": {
-      "price": 90.41,
-      "marketCap": 229672599768,
+      "price": 90.61,
+      "marketCap": 230180668786,
       "employees": 40009,
       "sector": "Basic Materials",
       "country": "AU",
       "ipoDate": "1980-03-17"
     },
-    "ARMCO": {
-      "price": 26.5,
-      "marketCap": 6410546100000,
-      "employees": 67947,
-      "sector": "Energy",
-      "country": "SA",
-      "ipoDate": "2019-12-11"
-    },
     "SPOT": {
-      "price": 488.14,
-      "marketCap": 100353873829,
-      "employees": 7258,
+      "price": 511.82,
+      "marketCap": 105222107803,
+      "employees": 7000,
       "sector": "Communication Services",
       "country": "SE",
       "ipoDate": "2018-04-03"
