@@ -1,2 +1,3 @@
 .env
 scripts/fetch-log.txt
+*.stackdump
