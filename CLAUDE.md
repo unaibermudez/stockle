@@ -1,332 +1,275 @@
-# Stockle — CLAUDE.md
+# CLAUDE.md
 
-Juego diario estilo Wordle para adivinar una acción de bolsa. Cada día hay una acción objetivo; el usuario hace guesses por ticker y recibe feedback campo a campo. Sin backend, sin base de datos — todo corre en el navegador.
+Guía para trabajar en este repositorio. Describe **el código que hay hoy**, no el diseño inicial.
 
----
+## Qué es esto
+
+Juego diario tipo Wordle: hay que adivinar una acción de bolsa en **6 intentos**. Cada intento es
+un ticker del pool, y el juego responde comparando ocho columnas (país, sector, capitalización,
+precio, EBITDA, empleados, año de fundación) con un semáforo de tres colores.
+
+Sin backend, sin base de datos, sin build step y sin dependencias. El navegador carga tres
+ficheros y ya está.
 
 ## Stack
 
-| Capa | Tecnología |
+| Capa | Qué se usa |
 |------|-----------|
-| Frontend | HTML + CSS + JavaScript vanilla (sin frameworks) |
-| Datos estáticos | `stocks.js` — objeto JS hardcodeado con todos los datos fijos del pool |
-| Datos dinámicos | Financial Modeling Prep (FMP) — llamada directa desde el frontend solo para precio actual |
-| Sesión | `localStorage` — guarda el estado del juego del día actual |
-| Deploy | GitHub Pages (estático, gratis) |
+| Frontend | HTML + CSS + JavaScript vanilla, sin frameworks |
+| Pool de acciones | `stocks.js`, un array literal cargado como `window.STOCKS` |
+| Precios | `prices.json`, regenerado por GitHub Actions (ver abajo) |
+| Sesión y estadísticas | `localStorage` |
+| Deploy | GitHub Pages, estático |
 
-**No hay backend, no hay base de datos, no hay build step.**
+Node solo se usa **fuera del navegador**, para los scripts de `scripts/`. No hay `package.json`
+ni `node_modules`: los scripts usan únicamente módulos nativos (`fs`, `path`) y el `fetch` global
+de Node 18+.
 
----
-
-## Estructura del proyecto
+## Estructura
 
 ```
-Stockle/
-├── index.html
+stockle/
+├── index.html                     # marcado base; carga stocks.js y app.js
 ├── style.css
-├── app.js          # lógica del juego
-├── stocks.js       # pool completo de acciones con datos fijos
-└── CLAUDE.md
+├── app.js                         # toda la lógica del juego y de la interfaz
+├── stocks.js                      # pool de acciones con los campos fijos
+├── prices.json                    # generado; precios y perfiles descargados de FMP
+├── .github/workflows/
+│   └── update-prices.yml          # cron que regenera prices.json
+└── scripts/
+    ├── fetch-prices.js            # el que corre en CI y en local
+    ├── test-alt-tickers.js        # exploratorio, no entra en CI
+    ├── test-yahoo-fallback.js     # exploratorio, no entra en CI
+    └── PENDIENTE-yahoo-fallback.md
 ```
 
----
+## De dónde salen los datos
 
-## Separación de datos: fijos vs dinámicos
+Hay **dos fuentes** y conviene no confundirlas, porque es el punto donde más fácil es meter la pata.
 
-### Datos fijos — en `stocks.js` (hardcodeados, nunca cambian)
+### 1. `stocks.js`, los campos fijos
+
+Un array de objetos, uno por acción:
 
 ```javascript
-const STOCKS = {
-  "ITX.MC": {
-    name: "Inditex",
-    ticker: "ITX.MC",
-    country: "España",
-    sector: "Consumo",
-    industry: "Textil",
-    employees: 165000,
-    ipoYear: 2001,
-    mktCapBucket: "Mega Cap",  // bucket fijo para comparación
-  },
-  "AAPL": {
-    name: "Apple",
-    ticker: "AAPL",
-    country: "USA",
-    sector: "Tecnología",
-    industry: "Hardware",
-    employees: 164000,
-    ipoYear: 1980,
-    mktCapBucket: "Mega Cap",
-  },
-  // ... resto del pool
-};
+window.STOCKS = [
+  { ticker:"ITX.MC", name:"Inditex", country:"España", sector:"Consumer Cyclical",
+    marketCap:120, price:42, ebitda:8.0, employees:165000, founded:1985, color:"#003087" },
+  // …
+];
 ```
 
-### Datos dinámicos — llamada a FMP al cargar la página
+| Campo | Unidad / formato | Origen |
+|---|---|---|
+| `ticker` | símbolo interno, sufijo `.MC` para BME | manual |
+| `name`, `country`, `sector` | texto | manual |
+| `marketCap`, `ebitda` | **miles de millones de dólares** | estimado a mano |
+| `price` | dólares | valor inicial, se sobrescribe en runtime |
+| `employees` | entero | estimado a mano |
+| `founded` | año de fundación de la empresa | manual |
+| `color` | hex, usado en el badge del logo | manual |
 
-Solo se llama a FMP **una vez por sesión** para obtener el precio actual de la acción del día. El precio se guarda en `localStorage` con TTL de 24h para no repetir la llamada.
+**Es un array, no un objeto indexado por ticker.** Buscar una acción es
+`STOCKS.find(s => s.ticker === tk)`.
 
-```javascript
-// Único endpoint usado
-GET https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey=KEY
-// Devuelve: { symbol, price, volume }
-```
+Ojo con dos cosas: `marketCap`, `ebitda` y `employees` son **estimaciones redondeadas a ojo**, no
+datos verificados, y `founded` es el año de **fundación de la empresa**, no el de su salida a
+bolsa. Son los valores que el juego usa para comparar.
 
-**La API key de FMP va en `stocks.js` como constante.** Al ser un proyecto personal/portfolio sin datos sensibles, es aceptable. Si se quiere proteger, se puede usar un proxy serverless (Netlify Function, Cloudflare Worker).
+### 2. `prices.json`, lo que se descarga
 
----
+Lo genera `scripts/fetch-prices.js` contra la API de Financial Modeling Prep, y tiene dos bloques:
 
-## Lógica del juego (app.js)
-
-### Acción del día
-
-Se determina de forma **determinista por fecha**, sin servidor:
-
-```javascript
-function getDailyStock() {
-  const tickers = Object.keys(STOCKS);
-  const today = new Date();
-  const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-  const index = seed % tickers.length;
-  return tickers[index];
-}
-```
-
-Todos los usuarios del mismo día ven la misma acción. Sin servidor, sin sincronización.
-
-### Comparación de campos
-
-| Campo | Tipo | Lógica |
-|-------|------|--------|
-| `country` | Categórico | ✅ CORRECT / ❌ WRONG |
-| `sector` | Categórico | ✅ CORRECT / ❌ WRONG |
-| `industry` | Categórico | ✅ CORRECT / ❌ WRONG |
-| `mktCapBucket` | Categórico | ✅ CORRECT / ❌ WRONG |
-| `employees` | Numérico | ✅ / ↑ HIGHER / ↓ LOWER |
-| `ipoYear` | Numérico | ✅ / ↑ HIGHER / ↓ LOWER |
-| `price` | Numérico (FMP) | ✅ / ↑ HIGHER / ↓ LOWER |
-
-Tolerancia en numéricos: ±10% → CORRECT.
-
-**Market Cap como bucket, no como número exacto** (evita que el precio cambie el resultado del día):
-```
-Nano Cap    < 50M
-Micro Cap   50M – 300M
-Small Cap   300M – 2B
-Mid Cap     2B – 10B
-Large Cap   10B – 200B
-Mega Cap    > 200B
-```
-
-### Sesión en localStorage
-
-```javascript
-// Clave: "stockle_YYYY-MM-DD"
+```json
 {
-  guesses: ["ITX.MC", "AAPL"],   // tickers intentados
-  won: false,
-  attempts: 2
+  "updated": "2026-08-12T23:12:59.314Z",
+  "count": 44,
+  "prices":   { "ITX.MC": 58.66, "AAPL": 304.91 },
+  "profiles": { "AAPL": { "price": 304.91, "marketCap": 4478321717960,
+                          "employees": 166000, "sector": "Technology",
+                          "country": "US", "ipoDate": "1980-12-12" } }
 }
 ```
 
-Al cambiar el día, la clave es distinta → estado limpio automáticamente. Las claves viejas se limpian en cada carga.
+`count` es cuántos tickers respondieron **en la última ejecución**, no cuántos hay en el fichero.
+`prices` acumula 127 tickers de ejecuciones anteriores; `profiles` solo trae los 44 que
+respondieron esta vez. Que esos dos números no cuadren es justamente el síntoma del problema
+descrito en "Limitaciones conocidas".
 
----
+**Hoy el frontend solo consume `prices`.** `loadPrices()` en `app.js` sobrescribe `s.price` de
+cada acción y nada más; el bloque `profiles`, que trae capitalización, empleados, sector y país
+**reales**, se descarga y se queda sin usar. Por eso el juego compara con las estimaciones de
+`stocks.js` teniendo los datos buenos en el mismo fichero.
 
-## API externa: Financial Modeling Prep (FMP)
+Si `prices.json` falla al cargarse, `loadPrices()` traga el error y el juego sigue con los precios
+estáticos de `stocks.js`. Degrada, no rompe.
 
-**Solo se usa para el precio actual** — todo lo demás es estático.
+## La clave de FMP nunca va en el frontend
 
-```
-Free tier: 250 requests/día
-Uso real en Stockle: 1 request/día/usuario (precio de la acción del día)
-```
+Esto es importante y el repo es público:
+
+- La clave vive en **`FMP_API_KEY`**, y solo la lee `scripts/fetch-prices.js`, que corre en Node.
+- En CI llega por `secrets.FMP_API_KEY`, inyectada como variable de entorno en el workflow.
+- En local se lee de un `.env` en la raíz (`FMP_API_KEY=tu_clave`), parseado a mano al arrancar
+  el script. **`.env` está en `.gitignore` y no debe salir de ahí.**
+- El navegador **no llama a FMP** ni conoce la clave. Solo hace `fetch("prices.json")`.
+
+Versiones antiguas de este documento decían que la clave iba como constante en `stocks.js`. **Eso
+es falso y además sería un error:** cualquier visitante puede leer un fichero servido a su
+navegador. Si algún día hiciera falta consultar FMP en tiempo real, la salida es un proxy
+serverless, no una constante en el cliente.
+
+## Cómo se actualizan los precios
+
+`.github/workflows/update-prices.yml`, de lunes a viernes a las 22:30 UTC, después del cierre de
+Europa y Estados Unidos. También se puede lanzar a mano con `workflow_dispatch`.
+
+El job pide el perfil de los 139 tickers de la lista `TICKERS`, escribe `prices.json` y hace
+commit solo si hay cambios, firmando como `github-actions[bot]`.
+
+Detalles de `fetch-prices.js` que importan al tocarlo:
+
+- **350 ms de espera entre peticiones**, porque el plan gratuito de FMP da 250 al día.
+- **Reintento ante un 429**, hasta 3 veces, con espera creciente de 10 s por intento.
+- **`FMP_MAP`** traduce los tickers internos a los símbolos reales de FMP cuando no coinciden.
+  Ejemplos: `ATRM.MC` es `A3M.MC`, `LVMH` es `MC.PA`, `CCEP.MC` cotiza como `CCEP` en NASDAQ.
+- **Los precios anteriores se conservan.** El script parte del `prices.json` existente, así que un
+  ticker que falle un día mantiene su último precio bueno en lugar de desaparecer.
+- Cada acción se clasifica como `ok`, `partial` (le faltan campos) o `error`, y el detalle se
+  escribe en `scripts/fetch-log.txt`, que está ignorado por git.
+- Si no se obtiene **ningún** precio, sale con código 1 para que el workflow falle de forma visible.
+
+**Los commits del bot no cuentan como contribuciones en el perfil de GitHub.** Es normal, no es un
+síntoma de nada roto.
+
+## Lógica del juego
+
+Todo está en `app.js`.
+
+### Qué acción toca cada día
 
 ```javascript
-const FMP_API_KEY = "TU_KEY_AQUI"; // en stocks.js
-const FMP_BASE = "https://financialmodelingprep.com/api/v3";
+const EPOCH = Date.UTC(2025, 0, 1);
 
-async function fetchCurrentPrice(ticker) {
-  const cached = getPriceFromCache(ticker); // localStorage, TTL 24h
-  if (cached) return cached;
-
-  const res = await fetch(`${FMP_BASE}/quote-short/${ticker}?apikey=${FMP_API_KEY}`);
-  const data = await res.json();
-  const price = data[0]?.price ?? null;
-
-  savePriceToCache(ticker, price);
-  return price;
+function puzzleNumber() {
+  const d = new Date();
+  const utc = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.floor((utc - EPOCH) / 86400000);
+}
+function getDailyAnswer(pn) {
+  return STOCKS[((pn % STOCKS.length) + STOCKS.length) % STOCKS.length];
 }
 ```
 
----
+Días transcurridos desde el 1 de enero de 2025 en UTC, y ese número indexa el array. Determinista,
+igual para todo el mundo y sin servidor. El doble módulo es para que fechas anteriores a la época
+no den un índice negativo.
 
-## Convenciones
+Como el índice avanza de uno en uno, **el pool se recorre en orden**, no aleatoriamente: la acción
+de mañana es la siguiente del array. Con 140 entradas, el ciclo completo son unos 4,6 meses.
 
-- Todo en español en la UI, código en inglés
-- Sin dependencias externas — cero `npm install`
-- Sin transpilación — JS moderno (ES2020+), navegadores modernos
-- Un archivo por responsabilidad: `stocks.js` solo datos, `app.js` solo lógica, `style.css` solo estilos
-- Commits en inglés: `feat:`, `fix:`, `chore:`
+### Las columnas y su comparación
 
----
+`COLUMNS` define las ocho columnas de la tabla. Cada una es `cat` (categórica) o `num` (numérica),
+y `compareCell()` devuelve un estado y una dirección:
+
+| Tipo | Regla | Estados posibles |
+|---|---|---|
+| `cat` (ticker, país, sector) | igualdad exacta | verde o rojo |
+| `founded` | diferencia absoluta de años: 0 verde, ≤ 8 ámbar, resto rojo | verde, ámbar, rojo |
+| Resto de `num` | ratio `guess / answer`: entre 0,95 y 1,05 verde; entre 0,5 y 2,0 ámbar; resto rojo | verde, ámbar, rojo |
+
+**Son tres estados, no dos.** El ámbar significa "cerca" y es lo que hace jugable el juego: con
+solo verde y rojo, acertar una capitalización exacta sería imposible.
+
+La dirección (`up` / `down`) se calcula comparando con la respuesta y se pinta como flecha en las
+celdas numéricas que no son verdes.
+
+### Estado guardado
+
+Dos claves de `localStorage`, con formatos distintos:
+
+| Clave | Contenido |
+|---|---|
+| `stockle_game_<pn>` | partida del día: `{ guesses: [ticker], status }`. `<pn>` es el número de puzzle, no la fecha |
+| `stockle_stats` | acumulado: `{ currentStreak, maxStreak, played, wins, lastWonPuzzle }` |
+
+Al cambiar de día cambia `<pn>`, así que la partida arranca limpia sola. Las claves viejas **no se
+borran**, se quedan acumulando en el navegador.
+
+Todos los accesos van envueltos en `try/catch`: si `localStorage` no está disponible, se juega sin
+persistencia en lugar de petar.
+
+### Otras piezas de la interfaz
+
+- **Autocompletado** en el buscador, filtrando por nombre o ticker.
+- **Pista** (`getHintStock()`), con 30 segundos de espera entre usos.
+- **Texto para compartir**, la típica cuadrícula de emojis, con 🟩 🟨 🟥.
+- **Confeti** al ganar, dibujado a mano sin librería.
+- **Modo dev**: se activa con `?dev=1` en la URL o con `Ctrl+Shift+D`. Muestra la lista completa
+  de acciones con filtros, útil para revisar el pool. No hace falta quitarlo para desplegar.
 
 ## Levantar en local
 
-```bash
-# Opción 1 — Python (sin instalar nada)
-python3 -m http.server 3000
+Hace falta un servidor, porque `app.js` hace `fetch("prices.json")` y `file://` lo bloquea.
 
-# Opción 2 — VS Code Live Server
-# Instalar extensión Live Server → botón "Go Live"
+```bash
+python3 -m http.server 3000     # o la extensión Live Server de VS Code
 ```
 
-Abrir `http://localhost:3000` en el navegador.
+Para regenerar los precios a mano:
 
----
+```bash
+echo "FMP_API_KEY=tu_clave" > .env
+node scripts/fetch-prices.js
+```
+
+Gasta una petición por ticker, 139 en total, sobre un límite diario de 250. No conviene lanzarlo
+varias veces el mismo día.
 
 ## Deploy
 
-GitHub Pages: subir los 4 archivos al repo, activar Pages desde `main/root`. URL automática: `https://usuario.github.io/stockle`.
+GitHub Pages sobre `main`, sin build. Está publicado en
+**https://unaibermudez.github.io/stockle/** (la ruta va en minúsculas).
 
----
+Cualquier push a `main` republica, incluidos los del bot de precios.
 
-## Pool de acciones
+## Convenciones
 
-Pool curado en `stocks.js`. Total: ~161 acciones (~5,4 meses sin repetir).
+- La interfaz está en inglés y el código y los comentarios, en español. Es así por histórico.
+- Cero dependencias. Añadir un `package.json` es una decisión de calado, no un detalle: hoy la
+  ausencia de build step es lo que permite que Pages sirva el repo tal cual.
+- Un fichero por responsabilidad: `stocks.js` solo datos, `app.js` solo lógica, `style.css` solo
+  estilos.
+- Prefijos de commit `feat:`, `fix:`, `chore:`, `docs:`. El idioma está sin unificar: los del bot
+  van en español y los manuales han ido en los dos. Conviene decidirlo antes de escribir muchos
+  más.
+- **Los commits van a nombre del usuario.** No añadir trailers `Co-Authored-By` de Claude ni de
+  ninguna IA.
 
-**Regla de inclusión:** la acción debe tener todos los campos fijos bien definidos (country, sector, industry, employees, ipoYear, mktCapBucket). El precio lo obtiene FMP en tiempo real.
+## Limitaciones conocidas
 
-### 🇪🇸 España — Tier A: IBEX 35
+Cosas que están mal a propósito o a medias, para no volver a diagnosticarlas desde cero:
 
-```
-SAN.MC    BBVA.MC   TEF.MC    IBE.MC    REP.MC
-AMS.MC    CABK.MC   SAB.MC    BKT.MC    ENG.MC
-FER.MC    ACS.MC    ANA.MC    MAP.MC    IAG.MC
-MEL.MC    SOL.MC    VIS.MC    ACX.MC    GRF.MC
-LOG.MC    MTS.MC    NTGY.MC   PHM.MC    CLNX.MC
-COL.MC    AENA.MC   ROVI.MC   MRL.MC    ELE.MC
-FDR.MC    ALMS.MC   BEST.MC   IDR.MC    ITX.MC
-```
+1. **El bloque `profiles` de `prices.json` no se usa.** Es la mejora de mayor impacto: haría que
+   las comparaciones dejaran de basarse en estimaciones a ojo.
+2. **`GRF.MC` está duplicado en `stocks.js`**, como "Grifols" y "Grifols B". Son 140 entradas con
+   139 tickers únicos, y la segunda se descarta en silencio porque `find()` devuelve la primera.
+3. **FMP ya no cubre la bolsa española, y es el problema más serio del proyecto.** De los 94
+   tickers `.MC` de la lista, **92 fallan** en cada ejecución. Los dos que sobreviven, `EBO.MC` y
+   `CCEP.MC`, son precisamente los dos que `FMP_MAP` redirige a mercados de fuera de BME (OTC y
+   NASDAQ). En junio de 2026 fallaban 25 de 139; hoy fallan 95.
 
-### 🇪🇸 España — Tier B: Mercado Continuo, grandes conocidas
+   El efecto es silencioso y por eso engaña: como el script conserva los precios anteriores, esas
+   acciones **siguen apareciendo con el precio que tenían la última vez que la cobertura
+   funcionó**, sin ninguna marca de que están congeladas. El juego presenta datos viejos como si
+   fueran del día.
 
-```
-SGRE.MC   # Siemens Gamesa
-CIE.MC    # CIE Automotive
-CAF.MC    # Construcciones y Aux. Ferrocarriles (Beasain)
-FLC.MC    # Fluidra (piscinas, líder mundial)
-GST.MC    # Gestamp (automoción)
-ATRM.MC   # Atresmedia (Antena 3, La Sexta)
-DIA.MC    # Dia (supermercados)
-EBO.MC    # Ebro Foods (Gallo, SOS)
-FCC.MC    # FCC (construcción, agua)
-ENCE.MC   # Ence (papel, biomasa)
-FAE.MC    # Faes Farma
-CCEP.MC   # Coca-Cola Europacific Partners
-EDR.MC    # eDreams (viajes online)
-DOM.MC    # Dominion (servicios tecnológicos)
-IND.MC    # Indra (defensa, tecnología)
-ALM.MC    # Almirall (farmacia)
-AZK.MC    # Azkoyen (máquinas vending)
-LRE.MC    # Linea Directa Aseguradora
-GCO.MC    # Grupo Catalana Occidente (seguros)
-AUD.MC    # Audax Renovables
-ECO.MC    # Ecoener
-GREN.MC   # Grenergy (solar)
-DLEO.MC   # Deoleo (aceite de oliva, Carbonell)
-CBAV.MC   # Clínica Baviera
-MCM.MC    # Mecalux (logística automatizada)
-NXT.MC    # Nextil (textil técnico)
-AMPE.MC   # Amper (telecomunicaciones, defensa)
-```
-
-### 🇪🇸 España — Tier C: Mercado Continuo, medianas (verificar datos antes de añadir)
-
-```
-AIRT.MC   # Airtificial (robótica industrial)
-AEDAS.MC  # Aedas Homes (promotora inmobiliaria)
-ALBA.MC   # Corp. Financiera Alba (holding)
-IBPG.MC   # Iberpapel
-TPZ.MC    # Telepizza
-PRIM.MC   # Prim (material médico)
-TUB.MC    # Tubacex (tubos acero — Llodio)
-VID.MC    # Vidrala (envases vidrio — Álava)
-SLR.MC    # Solaria (solar)
-LAR.MC    # Lar España (SOCIMI retail)
-OHLA.MC   # OHLA (construcción)
-DFG.MC    # Duro Felguera (ingeniería industrial)
-ERE.MC    # Ercros (química)
-ELEC.MC   # Elecnor
-```
-
-### 🇪🇸 España — Tier D: Pequeñas (añadir solo si datos completos verificados)
-
-```
-ADX.MC    # Alantra (banca inversión)
-BRIO.MC   # Bodegas Riojanas
-LGT.MC    # Lingotes Especiales
-GAM.MC    # GAM (alquiler maquinaria)
-BERKA.MC  # Berkeley (minería uranio)
-LBTS.MC   # Libertas 7
-INMB.MC   # Inmobiliaria del Sur
-```
-
-### 🇺🇸 USA — S&P 500 + tech conocida (~60)
-
-```
-AAPL   MSFT   GOOGL  AMZN   NVDA   META   TSLA   JPM
-V      MA     UNH    JNJ    XOM    PG     HD     CVX
-MRK    ABBV   KO     PEP    AVGO   LLY    COST   MCD
-TMO    ACN    BAC    CRM    NFLX   AMD    INTC   CSCO
-DIS    NKE    ADBE   TXN    QCOM   PM     WMT    IBM
-GE     BA     CAT    MMM    HON    RTX    LMT    GS
-MS     PYPL   UBER   SPOT   ABNB   COIN   PLTR   SQ
-BRK-B  BKNG   HOOD
-```
-
-### 🌍 Globales conocidas (~18)
-
-```
-ASML      # ASML (litografía semiconductores, Holanda)
-SAP       # SAP (ERP, Alemania)
-TM        # Toyota (Japón)
-HSBC      # HSBC (banca global)
-SHEL      # Shell (energía)
-TSM       # TSMC (semiconductores, Taiwán)
-BABA      # Alibaba (China)
-NVO       # Novo Nordisk (farmacia, Dinamarca)
-TTE       # TotalEnergies (energía, Francia)
-RACE      # Ferrari (Italia)
-ARM       # ARM Holdings (chips, UK)
-MC.PA     # LVMH (lujo, Francia)
-AIR.PA    # Airbus (aeroespacial)
-SIE.DE    # Siemens (Alemania)
-ADS.DE    # Adidas (Alemania)
-VOW3.DE   # Volkswagen (Alemania)
-NESN.SW   # Nestlé (Suiza)
-```
-
-### Resumen del pool
-
-| Región | Tier | Nº acciones | Estado |
-|--------|------|-------------|--------|
-| 🇪🇸 España | A (IBEX 35) | 35 | ✅ Activo |
-| 🇪🇸 España | B (Continuo grandes) | 27 | ✅ Activo |
-| 🇪🇸 España | C (Continuo medianas) | 14 | ⚠️ Verificar |
-| 🇪🇸 España | D (Pequeñas) | 7 | ⚠️ Verificar |
-| 🇺🇸 USA | — | ~60 | ✅ Activo |
-| 🌍 Globales | — | ~17 | ✅ Activo |
-| **Total** | | **~160** | |
-
-**~160 días = ~5,3 meses** sin repetir acción.
-
----
-
-## Roadmap de fases
-
-1. **Setup** — repo GitHub, 4 archivos base, GitHub Pages activo
-2. **Datos** — rellenar `stocks.js` con el pool completo (campos fijos)
-3. **Juego core** — lógica de selección diaria, comparación de campos, localStorage
-4. **UI** — tabla de guesses, autocomplete, feedback visual (colores)
-5. **FMP** — integración precio actual, caché en localStorage 24h
-6. **Polish** — animaciones, share button (grid de emojis), mobile
+   Afecta a dos tercios del pool, que es justo la parte española, la razón de ser del proyecto.
+   Antes de tocar nada más, hay que decidir la fuente de datos: el fallback a Yahoo Finance
+   analizado en `scripts/PENDIENTE-yahoo-fallback.md`, otro proveedor, o un plan de pago.
+   Mientras tanto, conviene no fiarse de los precios `.MC` de `prices.json`.
+4. **No hay tests.** `puzzleNumber()`, `getDailyAnswer()` y `compareCell()` son funciones puras y
+   deterministas, así que serían fáciles de cubrir, pero exigirían decidir antes lo del
+   `package.json`.
+5. **No hay README.** Este documento es la única documentación del repo.
