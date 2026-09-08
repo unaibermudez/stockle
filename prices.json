@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-05T00:19:04.546Z",
+  "updated": "2026-09-08T00:38:23.301Z",
   "count": 44,
   "prices": {
     "ITX.MC": 58.66,
@@ -105,7 +105,7 @@
     "TM": 197.11,
     "SONY": 24.56,
     "BABA": 113.24,
-    "TCEHY": 56.57,
+    "TCEHY": 56.6,
     "RY": 210.59,
     "SHOP": 145.09,
     "SHEL": 92.95,
@@ -270,7 +270,7 @@
     "HD": {
       "price": 321.05,
       "marketCap": 320124412850,
-      "employees": 470000,
+      "employees": 472400,
       "sector": "Consumer Cyclical",
       "country": "US",
       "ipoDate": "1981-09-22"
@@ -404,8 +404,8 @@
       "ipoDate": "2014-09-19"
     },
     "TCEHY": {
-      "price": 56.57,
-      "marketCap": 509776447226,
+      "price": 56.6,
+      "marketCap": 510046790048,
       "employees": 115849,
       "sector": "Communication Services",
       "country": "CN",
@@ -414,7 +414,7 @@
     "RY": {
       "price": 210.59,
       "marketCap": 292673770200,
-      "employees": 97795,
+      "employees": 101269,
       "sector": "Financial Services",
       "country": "CA",
       "ipoDate": "1995-10-16"
